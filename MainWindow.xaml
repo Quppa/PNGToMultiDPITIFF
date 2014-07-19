@@ -1,0 +1,139 @@
+﻿<Window x:Class="PNGToMultiDPITIFFPublic.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="PNG to Multi-DPI TIFF" Height="350" Width="525" AllowDrop="True" Drop="Window_Drop" TextOptions.TextFormattingMode="Display" SnapsToDevicePixels="True" UseLayoutRounding="True">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="5,5,5,0">
+            <Button Name="SelectFilesButton" Height="23" Width="75" Margin="0,0,5,1" Click="SelectFilesButton_Click">Add Files</Button>
+            <Button Name="ClearFilesButton" Height="23" Width="75" Margin="0,0,5,1" Click="ClearFilesButton_Click" IsEnabled="False">Clear Files</Button>
+            <Button Name="ProcessFilesButton" Height="23" Width="75" Margin="0,0,0,1" IsEnabled="False" Click="ProcessFilesButton_Click">Process</Button>
+        </StackPanel>
+        <TextBlock Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"><Hyperlink Click="HyperlinkClick">quppa.net</Hyperlink></TextBlock>
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" Margin="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <TextBlock VerticalAlignment="Center">Output Filename:</TextBlock>
+                <TextBox Name="OutputFilenameTextBox" Grid.Column="1" Margin="5,0,0,0" VerticalContentAlignment="Center"></TextBox>
+            </Grid>
+            <DataGrid ItemsSource="{Binding InputFiles}"
+            AutoGenerateColumns="False"
+            SelectionMode="Single"
+            CanUserReorderColumns="False" CanUserResizeColumns="False" 
+            CanUserResizeRows="False" CanUserSortColumns="False"
+            CanUserAddRows="False" CanUserDeleteRows="True"
+            HeadersVisibility="Column" Background="Transparent" BorderBrush="Transparent"
+            GridLinesVisibility="None" RowBackground="Transparent" VerticalScrollBarVisibility="Auto"
+            FocusVisualStyle="{x:Null}"
+            Grid.Row="1" Margin="-1,0"
+            ScrollViewer.CanContentScroll="False">
+                <DataGrid.CellStyle>
+                    <Style TargetType="DataGridCell">
+                        <Setter Property="BorderThickness" Value="0" />
+                        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                        <Setter Property="IsTabStop" Value="False" />
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="#11000000" />
+                                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+                                <Setter Property="BorderThickness" Value="0" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.CellStyle>
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="Gray" />
+                                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+                                <Setter Property="BorderBrush" Value="Transparent" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.RowStyle>
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Header="Preview" Width="Auto" IsReadOnly="True">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Image Source="{Binding ImageScaledDown}" UseLayoutRounding="True" Stretch="None"  SnapsToDevicePixels="True" VerticalAlignment="Center" HorizontalAlignment="Center" ToolTipService.InitialShowDelay="0" ToolTipService.Placement="Bottom" ToolTipService.ShowDuration="999999999">
+                                    <Image.ToolTip>
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="3" />
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right">Height:</TextBlock>
+                                            <TextBlock Grid.Row="0" Grid.Column="2" TextAlignment="Left" Text="{Binding ImageHeight}" />
+                                            <TextBlock Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right">Width:</TextBlock>
+                                            <TextBlock Grid.Row="1" Grid.Column="2" TextAlignment="Left" Text="{Binding ImageWidth}" />
+                                            <TextBlock Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right">Size:</TextBlock>
+                                            <TextBlock Grid.Row="2" Grid.Column="2" TextAlignment="Left" Text="{Binding ImageSize}" />
+                                            <TextBlock Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right">Horizontal DPI:</TextBlock>
+                                            <TextBlock Grid.Row="3" Grid.Column="2" TextAlignment="Left" Text="{Binding ImageHorizontalDPI}" />
+                                            <TextBlock Grid.Row="4" Grid.Column="0" HorizontalAlignment="Right">Vertical DPI:</TextBlock>
+                                            <TextBlock Grid.Row="4" Grid.Column="2" TextAlignment="Left" Text="{Binding ImageVerticalDPI}" />
+                                            <Image Grid.Row="5" Grid.ColumnSpan="3" HorizontalAlignment="Left" Source="{Binding Image}" UseLayoutRounding="True" Stretch="None" SnapsToDevicePixels="True" />
+                                        </Grid>
+                                    </Image.ToolTip>
+                                </Image>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <!--<DataGridTextColumn Binding="{Binding DPI, Mode=TwoWay}" Header="DPI" Width="50" />-->
+                    <DataGridTemplateColumn Header="DPI" Width="50">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox VerticalAlignment="Center" TextAlignment="Right" Margin="2,0" Text="{Binding DPI, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                    <TextBox.ToolTip>
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="3" />
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right">Horizontal DPI:</TextBlock>
+                                            <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding ImageHorizontalDPI}" />
+                                            <TextBlock Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right">Vertical DPI:</TextBlock>
+                                            <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding ImageVerticalDPI}" />
+                                        </Grid>
+                                    </TextBox.ToolTip>
+                                </TextBox>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="File" Width="*" IsReadOnly="True">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock VerticalAlignment="Center" Text="{Binding Filename}" ToolTip="{Binding FilePath}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </Grid>
+</Window>
