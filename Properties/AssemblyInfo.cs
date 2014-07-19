@@ -10,9 +10,9 @@ using System.Windows;
 [assembly: AssemblyTitle("PNGToMultiDPITIFFPublic")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Quppa.net")]
 [assembly: AssemblyProduct("PNGToMultiDPITIFFPublic")]
-[assembly: AssemblyCopyright("Copyright ©  2013")]
+[assembly: AssemblyCopyright("Copyright © David Warner 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
